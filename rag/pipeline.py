@@ -21,7 +21,7 @@ class Pipeline:
         self.client = Groq(api_key=groq_api_key)
         self.retriever = Retriever()
         self.system_prompt = _load_system_prompt()
-        self.model = "llama3-8b-8192"
+        self.model = "llama-3.1-8b-instant"
 
     def ask(self, question: str) -> str:
         chunks = self.retriever.retrieve(question)
