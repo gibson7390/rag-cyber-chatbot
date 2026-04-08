@@ -6,6 +6,18 @@ A production-oriented Retrieval-Augmented Generation (RAG) chatbot designed to a
 ## Demo
 The chatbot accepts natural language cybersecurity queries and returns answers strictly grounded in retrieved documents, demonstrating measurable improvement in answer quality after RAG optimization (e.g., accurate ransomware initial access techniques sourced from CrowdStrike data instead of fallback uncertainty responses).
 
+**BEFORE: Insufficient retrieval with chunk_size=500 TOP_K=3**
+
+![BEFORE: Insufficient retrieval with chunk_size=500 TOP_K=3](IMG_1271.jpeg)
+
+**SETTINGS COMPARISON: BEFORE vs AFTER**
+
+![SETTINGS COMPARISON: BEFORE vs AFTER](IMG_1272.jpeg)
+
+**AFTER: Accurate CrowdStrike-sourced response with chunk_size=1000 TOP_K=5**
+
+![AFTER: Accurate CrowdStrike-sourced response with chunk_size=1000 TOP_K=5](IMG_1273.jpeg)
+
 ## Architecture
 The system follows a modular RAG architecture: documents are ingested, cleaned, and chunked before being embedded using HuggingFace embeddings and stored in Chroma; at query time, the retriever fetches top-k relevant chunks which are passed to Llama 3.1 via Groq API with a strict system prompt enforcing context-only generation.
 
