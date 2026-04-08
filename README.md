@@ -1,5 +1,10 @@
 # rag-cyber-chatbot
 
+## 🔗 Live Demo
+Try it now: https://rag-cyber-chatbot.replit.app
+
+No setup required. Ask questions about ransomware techniques, incident response, adversary tactics, and enterprise cybersecurity threats.
+
 ## Project Overview
 A production-oriented Retrieval-Augmented Generation (RAG) chatbot designed to answer cybersecurity questions using real-world threat intelligence and standards documents, combining Llama 3.1 (via Groq API) with a structured retrieval pipeline to deliver context-grounded, non-hallucinated responses.
 
