@@ -83,7 +83,14 @@ class Pipeline:
 
         answer = response.choices[0].message.content.strip()
 
-        if metadatas:
+        # Strip any "Sources:" block the LLM may have added itself to prevent duplicates
+        if "\nSources:" in answer:
+            answer = answer[:answer.index("\nSources:")].strip()
+
+        # Detect fallback response — per system prompt, no sources on fallback
+        is_fallback = answer.startswith("That specific information is not available")
+
+        if metadatas and not is_fallback:
             sources = _format_sources(metadatas)
             return f"{answer}\n\n{sources}"
 
