@@ -5,6 +5,24 @@ from rag.retriever import Retriever
 
 SYSTEM_PROMPT_PATH = "prompts/system_prompt.txt"
 
+FALLBACK_RESPONSE = (
+    "That specific information is not available in my knowledge base.\n\n"
+    "My knowledge base includes verified content from:\n"
+    "• CrowdStrike threat intelligence reports\n"
+    "• NIST incident response guidelines\n"
+    "• MITRE ATT&CK adversary techniques\n"
+    "• WEF cybersecurity research\n\n"
+    "I can help with topics such as:\n"
+    "• Ransomware techniques and initial access methods\n"
+    "• Incident response procedures (NIST)\n"
+    "• Adversary tactics and techniques (MITRE ATT&CK)\n"
+    "• Enterprise cybersecurity trends and risks\n\n"
+    "Try asking:\n"
+    "- How do ransomware groups gain initial access?\n"
+    "- What does NIST recommend for incident containment?\n"
+    "- What techniques are used in MITRE ATT&CK for phishing?"
+)
+
 
 def _load_system_prompt() -> str:
     try:
@@ -87,10 +105,13 @@ class Pipeline:
         if "\nSources:" in answer:
             answer = answer[:answer.index("\nSources:")].strip()
 
-        # Detect fallback response — per system prompt, no sources on fallback
-        is_fallback = answer.startswith("That specific information is not available")
+        # Detect fallback — LLM signals it has no relevant answer anywhere in its response
+        is_fallback = "That specific information is not available" in answer
 
-        if metadatas and not is_fallback:
+        if is_fallback:
+            return FALLBACK_RESPONSE
+
+        if metadatas:
             sources = _format_sources(metadatas)
             return f"{answer}\n\n{sources}"
 
