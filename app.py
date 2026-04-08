@@ -55,7 +55,7 @@ Best for:
         with gr.Column():
             input_box = gr.Textbox(
                 lines=3,
-                placeholder="e.g. What are the most common ransomware initial access techniques?",
+                placeholder="Ask about ransomware techniques, threat actors, incident response, MITRE ATT&CK tactics, or enterprise cybersecurity risks…",
                 label="Your Question",
             )
             submit_btn = gr.Button("Submit", variant="primary")
@@ -72,8 +72,13 @@ Best for:
     gr.Examples(
         examples=[
             "What are the most common techniques used by ransomware groups to gain initial access?",
-            "What does NIST recommend for incident response handling?",
+            "Who is WANDERING SPIDER and what ransomware are they associated with?",
+            "How are adversaries using legitimate remote tools to avoid detection?",
+            "What are the top cybersecurity concerns for CISOs in 2026?",
+            "How is AI being used to enhance cyberattacks?",
+            "What are the four phases of the incident response lifecycle according to NIST?",
             "What is the MITRE ATT&CK framework used for?",
+            "What does law enforcement say about ransomware takedowns in 2025?",
         ],
         inputs=input_box,
         outputs=output_box,
