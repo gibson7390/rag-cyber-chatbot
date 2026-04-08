@@ -41,8 +41,19 @@ with gr.Blocks(title="CyberBot — RAG Cybersecurity Knowledge Assistant") as de
         """
 # CyberBot — RAG Cybersecurity Knowledge Assistant
 
-Ask questions about cybersecurity threats, vulnerabilities, and incident response.
-Answers are grounded in real threat intelligence documents including CrowdStrike, NIST, MITRE ATT&CK, and WEF reports.
+Ask questions about cybersecurity topics using real threat intelligence sources.
+
+This assistant is built on:
+- CrowdStrike Global Threat Report (2025)
+- NIST SP 800-61 Incident Response Guide
+- MITRE ATT&CK Framework
+- WEF Global Cybersecurity Outlook (2026)
+
+Best for:
+- Ransomware techniques and attack methods
+- Incident response procedures (NIST)
+- Adversary tactics and techniques (MITRE ATT&CK)
+- Enterprise cybersecurity trends and risks
         """
     )
 
@@ -61,6 +72,8 @@ Answers are grounded in real threat intelligence documents including CrowdStrike
                 label="CyberBot Response",
                 interactive=False,
             )
+
+    gr.Markdown("**Try one of these example questions to get started:**")
 
     gr.Examples(
         examples=EXAMPLE_QUESTIONS,
