@@ -51,5 +51,7 @@ A key performance improvement was observed after optimizing chunk size and retri
 ## Limitations
 The system is limited to four documents and may miss emerging threats not covered in the dataset; retrieval quality depends on embedding performance, and while hallucinations are constrained, responses are only as comprehensive as the retrieved context.
 
+**Retrieval gaps on structured queries:** Some questions that require the model to synthesize explicitly structured information (such as numbered lists or named frameworks) may trigger the fallback response even when the source document is in the knowledge base. This occurs when chunking splits the relevant content across boundaries, diluting the semantic signal. Example: questions asking for the exact four phases of the NIST incident response lifecycle. This is a known retrieval tuning challenge, not a pipeline failure — the correct fix is hybrid retrieval (BM25 + vector search) or smaller chunk overlap, documented in Future Improvements.
+
 ## Future Improvements
 Expand the knowledge base with continuously updated threat intelligence feeds, implement hybrid retrieval (BM25 + vector search), introduce automated evaluation benchmarks, add source citation formatting in responses, and explore fine-tuning or reranking models to further improve answer accuracy.
