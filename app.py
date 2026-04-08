@@ -30,31 +30,50 @@ def answer_question(question: str) -> str:
         return f"Error: {e}"
 
 
-demo = gr.Interface(
-    fn=answer_question,
-    inputs=gr.Textbox(
-        lines=3,
-        placeholder="e.g. What are the most common ransomware initial access techniques?",
-        label="Your Question",
-    ),
-    outputs=gr.Textbox(
-        lines=20,
-        label="CyberBot Response",
-    ),
-    title="CyberBot — RAG Cybersecurity Knowledge Assistant",
-    description=(
-        "Ask questions about cybersecurity threats, vulnerabilities, and incident response. "
-        "Answers are grounded in real threat intelligence documents including CrowdStrike, "
-        "NIST, MITRE ATT&CK, and WEF reports."
-    ),
-    examples=[
-        ["What are the most common techniques used by ransomware groups to gain initial access?"],
-        ["What does NIST recommend for incident response handling?"],
-        ["What is the MITRE ATT&CK framework used for?"],
-        ["What are the top cyber threats facing organizations in 2025 and 2026?"],
-    ],
-    flagging_mode="never",
-)
+EXAMPLE_QUESTIONS = [
+    ["What are the most common techniques used by ransomware groups to gain initial access?"],
+    ["What does NIST recommend for incident response handling?"],
+    ["What is the MITRE ATT&CK framework used for?"],
+]
+
+with gr.Blocks(title="CyberBot — RAG Cybersecurity Knowledge Assistant") as demo:
+    gr.Markdown(
+        """
+# CyberBot — RAG Cybersecurity Knowledge Assistant
+
+Ask questions about cybersecurity threats, vulnerabilities, and incident response.
+Answers are grounded in real threat intelligence documents including CrowdStrike, NIST, MITRE ATT&CK, and WEF reports.
+        """
+    )
+
+    with gr.Row():
+        with gr.Column():
+            question_box = gr.Textbox(
+                lines=3,
+                placeholder="e.g. What are the most common ransomware initial access techniques?",
+                label="Your Question",
+            )
+            submit_btn = gr.Button("Submit", variant="primary")
+
+        with gr.Column():
+            response_box = gr.Textbox(
+                lines=20,
+                label="CyberBot Response",
+                interactive=False,
+            )
+
+    gr.Examples(
+        examples=EXAMPLE_QUESTIONS,
+        inputs=question_box,
+        outputs=response_box,
+        fn=answer_question,
+        run_on_click=True,
+        label="Example Questions",
+    )
+
+    submit_btn.click(fn=answer_question, inputs=question_box, outputs=response_box)
+    question_box.submit(fn=answer_question, inputs=question_box, outputs=response_box)
+
 
 if __name__ == "__main__":
     demo.launch(
