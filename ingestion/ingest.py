@@ -2,7 +2,7 @@ import os
 import sys
 import chromadb
 from langchain_community.document_loaders import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from rag.embedder import get_embedding_function

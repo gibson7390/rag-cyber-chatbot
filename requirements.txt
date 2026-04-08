@@ -18,3 +18,4 @@ groq
 pypdf
 python-dotenv
 sentence-transformers
+langchain-text-splitters
