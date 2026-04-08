@@ -20,14 +20,15 @@ class Retriever:
         self.collection = self.client.get_collection(name=COLLECTION_NAME)
         self.embed_fn = get_embedding_function()
 
-    def retrieve(self, query: str) -> list[str]:
+    def retrieve(self, query: str) -> tuple[list[str], list[dict]]:
         query_embedding = self.embed_fn.embed_query(query)
 
         results = self.collection.query(
             query_embeddings=[query_embedding],
             n_results=TOP_K,
-            include=["documents"],
+            include=["documents", "metadatas"],
         )
 
-        documents = results.get("documents", [[]])
-        return documents[0] if documents else []
+        documents = results.get("documents", [[]])[0]
+        metadatas = results.get("metadatas", [[]])[0]
+        return documents, metadatas

@@ -1,3 +1,4 @@
+import os
 from groq import Groq
 from rag.retriever import Retriever
 
@@ -16,6 +17,37 @@ def _load_system_prompt() -> str:
         )
 
 
+def _format_sources(metadatas: list[dict]) -> str:
+    source_pages: dict[str, list[int]] = {}
+
+    for meta in metadatas:
+        raw_source = meta.get("source", "")
+        filename = os.path.basename(raw_source) if raw_source else "unknown"
+        page = meta.get("page")
+
+        if filename not in source_pages:
+            source_pages[filename] = []
+
+        if page is not None:
+            try:
+                page_num = int(page) + 1
+                if page_num not in source_pages[filename]:
+                    source_pages[filename].append(page_num)
+            except (ValueError, TypeError):
+                pass
+
+    lines = []
+    for filename, pages in source_pages.items():
+        if pages:
+            pages.sort()
+            page_str = ", ".join(str(p) for p in pages)
+            lines.append(f"- {filename} (page {page_str})")
+        else:
+            lines.append(f"- {filename}")
+
+    return "Sources:\n" + "\n".join(lines)
+
+
 class Pipeline:
     def __init__(self, groq_api_key: str):
         self.client = Groq(api_key=groq_api_key)
@@ -24,7 +56,7 @@ class Pipeline:
         self.model = "llama-3.1-8b-instant"
 
     def ask(self, question: str) -> str:
-        chunks = self.retriever.retrieve(question)
+        chunks, metadatas = self.retriever.retrieve(question)
 
         if chunks:
             context = "\n\n---\n\n".join(chunks)
@@ -49,7 +81,13 @@ class Pipeline:
             max_tokens=1024,
         )
 
-        return response.choices[0].message.content.strip()
+        answer = response.choices[0].message.content.strip()
+
+        if metadatas:
+            sources = _format_sources(metadatas)
+            return f"{answer}\n\n{sources}"
+
+        return answer
 
 
 def build_pipeline(groq_api_key: str) -> Pipeline:
