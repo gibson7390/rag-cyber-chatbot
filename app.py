@@ -7,34 +7,28 @@ load_dotenv()
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
-pipeline = None
+_pipeline = None
 
 
 def get_pipeline():
-    global pipeline
-    if pipeline is None:
+    global _pipeline
+    if _pipeline is None:
         if not GROQ_API_KEY:
             raise ValueError("GROQ_API_KEY is not set.")
-        pipeline = build_pipeline(GROQ_API_KEY)
-    return pipeline
+        _pipeline = build_pipeline(GROQ_API_KEY)
+    return _pipeline
 
 
-def answer_question(question: str) -> str:
-    if not question or not question.strip():
+def ask_question(query: str) -> str:
+    print(f"Query received: {query}")
+    if not query or not query.strip():
         return "Please enter a cybersecurity question to get started."
-
     try:
         bot = get_pipeline()
-        return bot.ask(question.strip())
+        return bot.ask(query.strip())
     except Exception as e:
         return f"Error: {e}"
 
-
-EXAMPLE_QUESTIONS = [
-    ["What are the most common techniques used by ransomware groups to gain initial access?"],
-    ["What does NIST recommend for incident response handling?"],
-    ["What is the MITRE ATT&CK framework used for?"],
-]
 
 with gr.Blocks(title="CyberBot — RAG Cybersecurity Knowledge Assistant") as demo:
     gr.Markdown(
@@ -59,7 +53,7 @@ Best for:
 
     with gr.Row():
         with gr.Column():
-            question_box = gr.Textbox(
+            input_box = gr.Textbox(
                 lines=3,
                 placeholder="e.g. What are the most common ransomware initial access techniques?",
                 label="Your Question",
@@ -67,7 +61,7 @@ Best for:
             submit_btn = gr.Button("Submit", variant="primary")
 
         with gr.Column():
-            response_box = gr.Textbox(
+            output_box = gr.Textbox(
                 lines=20,
                 label="CyberBot Response",
                 interactive=False,
@@ -76,16 +70,19 @@ Best for:
     gr.Markdown("**Try one of these example questions to get started:**")
 
     gr.Examples(
-        examples=EXAMPLE_QUESTIONS,
-        inputs=question_box,
-        outputs=response_box,
-        fn=answer_question,
+        examples=[
+            "What are the most common techniques used by ransomware groups to gain initial access?",
+            "What does NIST recommend for incident response handling?",
+            "What is the MITRE ATT&CK framework used for?",
+        ],
+        inputs=input_box,
+        outputs=output_box,
+        fn=ask_question,
         run_on_click=True,
-        label="Example Questions",
     )
 
-    submit_btn.click(fn=answer_question, inputs=question_box, outputs=response_box)
-    question_box.submit(fn=answer_question, inputs=question_box, outputs=response_box)
+    submit_btn.click(fn=ask_question, inputs=input_box, outputs=output_box)
+    input_box.submit(fn=ask_question, inputs=input_box, outputs=output_box)
 
 
 if __name__ == "__main__":
