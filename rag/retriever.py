@@ -3,7 +3,7 @@ from rag.embedder import get_embedding_function
 
 CHROMA_DIR = "data/chroma"
 COLLECTION_NAME = "cybersecurity"
-TOP_K = 3
+TOP_K = 5
 
 
 class Retriever:

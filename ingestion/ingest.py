@@ -10,8 +10,8 @@ from rag.embedder import get_embedding_function
 RAW_DIR = "data/raw"
 CHROMA_DIR = "data/chroma"
 COLLECTION_NAME = "cybersecurity"
-CHUNK_SIZE = 500
-CHUNK_OVERLAP = 50
+CHUNK_SIZE = 1000
+CHUNK_OVERLAP = 100
 
 
 def load_pdfs(raw_dir: str) -> list:
