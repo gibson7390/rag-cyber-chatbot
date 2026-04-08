@@ -24,5 +24,11 @@ env/
 venv/
 ENV/
 chroma_db/
+data/chroma/
+data/raw/*.pdf
 *.db
 .DS_Store
+.pythonlibs/
+uv.lock
+pyproject.toml
+attached_assets/
